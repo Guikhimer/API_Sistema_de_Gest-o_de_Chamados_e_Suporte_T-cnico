@@ -6,7 +6,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 const authRoutes = require('./routes/authRoutes');
 const chamadoRoutes = require('./routes/chamadoRoutes');
-const { pool } = require('./config/database');
+const { pool, isDatabaseAvailable } = require('./config/database');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
@@ -31,8 +31,8 @@ app.use('/api/auth', rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHe
 
 app.get('/api/health', async (req, res, next) => {
   try {
-    await pool.query('SELECT 1');
-    res.json({ status: 'ok', service: 'helpdesk-api' });
+    if (isDatabaseAvailable()) await pool.query('SELECT 1');
+    res.json({ status: 'ok', service: 'helpdesk-api', storage: isDatabaseAvailable() ? 'mysql' : 'memory-fallback' });
   } catch (error) {
     next(error);
   }

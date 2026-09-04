@@ -20,6 +20,7 @@ const pool = mysql.createPool({
   queueLimit: 0,
   ssl
 });
+let databaseAvailable = true;
 
 /**
  * Cria o esquema mínimo no banco configurado. Mantém o deploy reproduzível em
@@ -27,7 +28,8 @@ const pool = mysql.createPool({
  * @returns {Promise<void>}
  */
 const initializeDatabase = async () => {
-  await pool.query(`CREATE TABLE IF NOT EXISTS usuarios (
+  try {
+    await pool.query(`CREATE TABLE IF NOT EXISTS usuarios (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(120) NOT NULL,
     email VARCHAR(160) NOT NULL UNIQUE,
@@ -35,7 +37,7 @@ const initializeDatabase = async () => {
     perfil ENUM('cliente', 'tecnico') NOT NULL DEFAULT 'cliente',
     criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`);
-  await pool.query(`CREATE TABLE IF NOT EXISTS chamados (
+    await pool.query(`CREATE TABLE IF NOT EXISTS chamados (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(160) NOT NULL,
     descricao TEXT NOT NULL,
@@ -53,7 +55,7 @@ const initializeDatabase = async () => {
     INDEX idx_chamados_tecnico (tecnico_id),
     INDEX idx_chamados_status (status)
   )`);
-  await pool.query(`CREATE TABLE IF NOT EXISTS comentarios_chamado (
+    await pool.query(`CREATE TABLE IF NOT EXISTS comentarios_chamado (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     chamado_id INT UNSIGNED NOT NULL,
     usuario_id INT UNSIGNED NOT NULL,
@@ -62,7 +64,12 @@ const initializeDatabase = async () => {
     CONSTRAINT fk_comentarios_chamado FOREIGN KEY (chamado_id) REFERENCES chamados(id) ON DELETE CASCADE,
     CONSTRAINT fk_comentarios_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     INDEX idx_comentarios_chamado (chamado_id)
-  )`);
+    )`);
+    databaseAvailable = true;
+  } catch (error) {
+    databaseAvailable = false;
+    console.warn(`Banco MySQL indisponível; usando contingência em memória: ${error.code || error.message}`);
+  }
 };
 
-module.exports = { pool, initializeDatabase };
+module.exports = { pool, initializeDatabase, isDatabaseAvailable: () => databaseAvailable };
