@@ -1,4 +1,8 @@
 const mysql = require('mysql2/promise');
+const dns = require('node:dns');
+
+// Alguns provedores de hospedagem não roteiam IPv6 em serviços gratuitos.
+dns.setDefaultResultOrder('ipv4first');
 
 const ssl = process.env.DB_SSL === 'true'
   ? { rejectUnauthorized: true, ...(process.env.DB_SSL_CA ? { ca: Buffer.from(process.env.DB_SSL_CA, 'base64').toString('utf8') } : {}) }
@@ -11,8 +15,6 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  // O Aiven publica IPv4 e IPv6; serviços Render Free não dispõem de rota IPv6.
-  family: 4,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
