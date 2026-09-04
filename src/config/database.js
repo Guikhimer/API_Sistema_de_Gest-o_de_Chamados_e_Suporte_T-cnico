@@ -11,6 +11,8 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  // O Aiven publica IPv4 e IPv6; serviços Render Free não dispõem de rota IPv6.
+  family: 4,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
