@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portal de chamados do HelpDesk" />
+    <title>HelpDesk | Suporte Técnico</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#">Help<span>Desk</span></a>
+      <div id="session-area"></div>
+    </header>
+    <main class="container">
+      <section id="welcome" class="hero">
+        <p class="eyebrow">SUPORTE TÉCNICO</p>
+        <h1>Resolver problemas não precisa ser complicado.</h1>
+        <p>Abra, acompanhe e converse sobre seus chamados em um único lugar.</p>
+      </section>
+      <section id="auth-panel" class="auth-grid">
+        <form id="login-form" class="card form-card">
+          <h2>Entrar</h2>
+          <label>E-mail<input name="email" type="email" autocomplete="email" required /></label>
+          <label>Senha<input name="senha" type="password" autocomplete="current-password" required /></label>
+          <button>Entrar na conta</button>
+          <p class="form-message" aria-live="polite"></p>
+        </form>
+        <form id="register-form" class="card form-card">
+          <h2>Criar conta</h2>
+          <label>Nome<input name="nome" minlength="3" maxlength="120" required /></label>
+          <label>E-mail<input name="email" type="email" autocomplete="email" required /></label>
+          <label>Senha<input name="senha" type="password" minlength="8" maxlength="72" autocomplete="new-password" required /></label>
+          <label>Perfil
+            <select name="perfil"><option value="cliente">Cliente</option><option value="tecnico">Técnico</option></select>
+          </label>
+          <button>Criar conta</button>
+          <p class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
+      <section id="dashboard" hidden>
+        <div class="dashboard-head">
+          <div><p class="eyebrow">PAINEL</p><h1>Meus chamados</h1></div>
+          <button id="refresh-button" class="secondary">Atualizar</button>
+        </div>
+        <form id="ticket-form" class="card ticket-form" hidden>
+          <h2>Abrir novo chamado</h2>
+          <div class="form-row"><label>Título<input name="titulo" minlength="5" maxlength="160" required /></label><label>Categoria<input name="categoria" minlength="3" maxlength="80" placeholder="Ex.: Hardware" required /></label><label>Prioridade<select name="prioridade"><option>Media</option><option>Baixa</option><option>Alta</option><option>Critica</option></select></label></div>
+          <label>Descrição<textarea name="descricao" minlength="10" maxlength="5000" required></textarea></label>
+          <button>Abrir chamado</button><p class="form-message" aria-live="polite"></p>
+        </form>
+        <p id="ticket-feedback" class="form-message" aria-live="polite"></p>
+        <div id="tickets" class="tickets" aria-live="polite"></div>
+      </section>
+    </main>
+    <dialog id="details-dialog" class="details-dialog">
+      <button id="close-dialog" class="close-dialog" aria-label="Fechar">×</button>
+      <div id="details-content"></div>
+    </dialog>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
