@@ -1,4 +1,4 @@
-const pool = require('../config/database');
+const { pool } = require('../config/database');
 
 const SELECT_CHAMADO = `SELECT c.*, cliente.nome AS cliente_nome, cliente.email AS cliente_email,
   tecnico.nome AS tecnico_nome, tecnico.email AS tecnico_email

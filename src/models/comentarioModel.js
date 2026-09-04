@@ -1,4 +1,4 @@
-const pool = require('../config/database');
+const { pool } = require('../config/database');
 
 exports.listByChamado = async (chamadoId) => {
   const [rows] = await pool.execute(

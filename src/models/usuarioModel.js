@@ -1,4 +1,4 @@
-const pool = require('../config/database');
+const { pool } = require('../config/database');
 
 exports.findByEmail = async (email) => {
   const [rows] = await pool.execute(
